@@ -1,0 +1,87 @@
+﻿<Window x:Class="AirHockey.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Air Hockey" Height="600" Width="300">
+    <Grid>
+        <!-- Background of the hockey table -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Canvas Name="HockeyCanvas" Background="White">
+            <!-- Center line -->
+            <Rectangle Fill="Red" Height="5" Width="300" Canvas.Left="0" Canvas.Top="300" />
+
+            <!-- Upper line -->
+            <Rectangle Fill="Blue" Height="5" Width="300" Canvas.Left="0" Canvas.Top="200" />
+
+            <!-- Bottom line -->
+            <Rectangle Fill="Blue" Height="5" Width="300" Canvas.Left="0" Canvas.Top="400" />
+
+            <!-- Center Circle -->
+            <Ellipse Stroke="Red" StrokeThickness="5" Width="100" Height="100"
+                     Canvas.Left="100" Canvas.Top="250" />
+
+            <!-- Puck -->
+            <Ellipse Name="Puck" Fill="Black" Width="40" Height="40"
+                     Canvas.Left="130" Canvas.Top="280">
+                <Ellipse.Effect>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="5" Opacity="0.5"/>
+                </Ellipse.Effect>
+            </Ellipse>
+
+            <!-- Scores -->
+            <TextBlock Text="0" Name="PlayerTwoScore" FontSize="35" Canvas.Left="5" Canvas.Top="250"/>
+            <TextBlock Text="0" Name="PlayerOneScore" FontSize="35" Canvas.Left="5" Canvas.Top="300"/>
+
+            <!-- Goals -->
+            <Rectangle Name="PlayerTwoGoal" Fill="Blue" Width="100" Height="20" Canvas.Left="100" Canvas.Top="0" />
+            <Rectangle Name="PlayerOneGoal" Fill="Blue" Width="100" Height="20" Canvas.Left="100" Canvas.Top="565" />
+
+            <!-- Player 1 Paddle -->
+            <Ellipse Fill="Red" Width="20" Height="20" Canvas.Left="45" Canvas.Top="85" />
+            <Ellipse Stroke="Red" StrokeThickness="5" Width="70" Height="70" Canvas.Left="20" Canvas.Top="60" />
+
+            <!-- Player 2 Paddle -->
+            <Ellipse Fill="Red" Width="20" Height="20" Canvas.Left="235" Canvas.Top="85" />
+            <Ellipse Stroke="Red" StrokeThickness="5" Width="70" Height="70" Canvas.Left="210" Canvas.Top="60" />
+
+            <!-- Player 1 - Paddle Position 1 -->
+            <Ellipse Fill="Red" Width="20" Height="20" Canvas.Left="45" Canvas.Top="475" />
+            <Ellipse Stroke="Red" StrokeThickness="5" Width="70" Height="70" Canvas.Left="20" Canvas.Top="450" />
+
+            <!-- Player 1 - Paddle Position 2 -->
+            <Ellipse Fill="Red" Width="20" Height="20" Canvas.Left="235" Canvas.Top="475" />
+            <Ellipse Stroke="Red" StrokeThickness="5" Width="70" Height="70" Canvas.Left="210" Canvas.Top="450" />
+
+            <Canvas x:Name="PaddleTwoCanvas" Canvas.Left="142" Canvas.Top="240">
+                <!-- Paddle 1 -->
+                <Ellipse Name="Paddle2Main" Fill="Green" StrokeThickness="3" Width="50" Height="50" Canvas.Left="-17" Canvas.Top="-17">
+                    <Ellipse.Effect>
+                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="5" Opacity="0.5"/>
+                    </Ellipse.Effect>
+                </Ellipse>
+                <Ellipse Name="Paddle2Handle" Fill="Green" Width="15" Height="15" Canvas.Left="0" Canvas.Top="0">
+                    <Ellipse.Effect>
+                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="5" Opacity="0.5"/>
+                    </Ellipse.Effect>
+                </Ellipse>
+            </Canvas>
+
+            <Canvas x:Name="PaddleOneCanvas" Canvas.Left="142" Canvas.Top="345">
+                <!-- Paddle 2 -->
+                <Ellipse Name="Paddle1Main" Fill="Green" StrokeThickness="3" Width="50" Height="50" Canvas.Left="-17" Canvas.Top="-17">
+                    <Ellipse.Effect>
+                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="5" BlurRadius="10" Opacity="0.5"/>
+                    </Ellipse.Effect>
+                </Ellipse>
+                <Ellipse Name="Paddle1Handle" Fill="Green" Width="15" Height="15" Canvas.Left="0" Canvas.Top="0">
+                    <Ellipse.Effect>
+                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="5" BlurRadius="10" Opacity="0.5"/>
+                    </Ellipse.Effect>
+                </Ellipse>
+            </Canvas>
+
+        </Canvas>
+    </Grid>
+</Window>
