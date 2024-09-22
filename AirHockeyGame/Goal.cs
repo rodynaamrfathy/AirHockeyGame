@@ -15,11 +15,12 @@ namespace AirHockeyGame
         public Vector2 Min;
         public Vector2 Max;
 
-        public Goal(Vector2 max, Vector2 min)
+        public Goal()
         {
-            Max = max; // ex (100,0)
-            Min = min; // ex (200, 20)
+            Min = new Vector2(100, 565); // Bottom-left corner
+            Max = new Vector2(200, 585); // Top-right corner
         }
+
         public bool isGoalScored(Vector2 puckPosition, float puckRadius)
         {
             // check if the puck is inside the area of the goal

@@ -21,7 +21,6 @@ namespace AirHockeyGame
         private Display gameDisplay;
         private bool isMouseDown;
         private IEncryption encryption;
-        private object draggedShape;
         private Point initialMousePosition;
         private DateTime initialMouseDownTime;
         private Stopwatch stopwatch;
@@ -44,12 +43,12 @@ namespace AirHockeyGame
 
         private void InitializeGameComponents(string username)
         {
-            //Paddel paddle = /* Obtain paddle for player one */;
-            //Goal goal = /* Obtain goal */;
-            //var puckShape = /* Obtain puck shape */;
+            Paddel paddle = new Paddel(PaddleOneCanvas);
+            Goal goal = new Goal();
+            var puckShape = Puck;
 
-            //gameDisplay = new Display { HockeyTable = /* Obtain hockey canvas */ };
-            //gameEngine = new GameEngine(paddle, goal, puckShape, username);
+            gameDisplay = new Display { HockeyTable = HockeyCanvas };
+            gameEngine = new GameEngine(paddle, goal, puckShape, username);
         }
 
         private void StartGameNetworking()
@@ -77,40 +76,44 @@ namespace AirHockeyGame
 
         private void Paddle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (draggedShape != null)
-            {
-                isMouseDown = true;
-                gameEngine.player.Paddel.PaddelDrawingShape.CaptureMouse();
-                initialMousePosition = e.GetPosition(HockeyCanvas);
-                initialMouseDownTime = DateTime.Now;
-                stopwatch.Reset();
-
-                // Start sending updates continuously while the mouse is down
-                Task.Run(() => SendGameUpdates());
-            }
+            isMouseDown = true;
+            gameEngine.player.Paddel.PaddelDrawingShape.CaptureMouse();
+            initialMousePosition = e.GetPosition(HockeyCanvas);
+            initialMouseDownTime = DateTime.Now;
+            stopwatch.Reset();
+            Task.Run(() => SendGameUpdates());
         }
 
-        private void Paddle_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void paddle_mouseleftbuttonup(object sender, MouseButtonEventArgs e)
         {
-            if (draggedShape != null && isMouseDown)
+            if (isMouseDown)
             {
                 isMouseDown = false;
                 gameEngine.player.Paddel.PaddelDrawingShape.ReleaseMouseCapture();
-
-                // Optionally, handle UI changes or pause logic here
             }
         }
 
-        private void BallCanvas_MouseMove(object sender, MouseEventArgs e)
+        private void PaddelCanvas_MouseMove(object sender, MouseEventArgs e)
         {
             if (isMouseDown)
             {
                 var mousePos = e.GetPosition(HockeyCanvas);
-                //gameEngine.player.Paddel.Position = new Vector2((float)(mousePos.X - draggedShape.PaddelDrawingShape.Width / 2),
-                //                                            (float)(mousePos.Y - draggedShape.PaddelDrawingShape.Height / 2));
 
-                // Use display class to update canvas
-                // Update paddle position
+                // Calculate the new position of the paddle
+                double deltaX = mousePos.X - initialMousePosition.X;
+                double deltaY = mousePos.Y - initialMousePosition.Y;
+
+                // Update paddle position based on mouse movement
+                gameEngine.player.Paddel.Position = new Vector2(
+                    (float) (gameEngine.player.Paddel.Position.X + deltaX),
+                    (float)(gameEngine.player.Paddel.Position.Y + deltaY)
+                );
+
+                // Update the visual representation of the paddle
+                gameDisplay.UpdatePaddleDisplay(gameEngine.player.Paddel.Position);
+
+                // Update the initial mouse position for the next move event
+                initialMousePosition = mousePos;
             }
         }
 
@@ -130,6 +133,18 @@ namespace AirHockeyGame
                 // Delay between updates (e.g., 50 milliseconds for smooth updates)
                 Task.Delay(50).Wait();
             }
+        }
+
+        public void GameLoop()
+        {
+            //each 60fps it should recheck for the position of
+            //the paddel and the force applied on it by the mouse
+            //and then update on the screen display
+            //and send game update
+
+            //3yza el send update w el display y7slo parrallel lb3d msh wara b3d
+
+            //Start sending updates continuously while the mouse is down
         }
     }
 }

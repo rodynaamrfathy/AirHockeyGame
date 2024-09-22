@@ -12,12 +12,15 @@ namespace AirHockeyGame
     {
         public Canvas HockeyTable;
 
-        public void UpdateGameCanvas(Vector2 paddlePos, Vector2 puckPos)
+        public void UpdatePaddleDisplay(Vector2 paddlePos)
         {
             // Update player one paddle position
             //Canvas.SetLeft();
             //Canvas.SetTop();
+        }
 
+        public void UpdatePuckDisplay(Vector2 puckPos)
+        {
             // Update puck position
             //Canvas.SetLeft();
             //Canvas.SetTop();

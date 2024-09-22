@@ -13,9 +13,6 @@ namespace AirHockeyGame
         {
             player = new Player(paddel, goal, username);
             puck = new Puck(puckShape);
-
-            // Start the game loop
-            //Task.Run(() => GameLoop()); // Run the game loop
         }
 
         public void UpdateGame()
