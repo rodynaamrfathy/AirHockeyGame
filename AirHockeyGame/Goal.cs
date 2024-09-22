@@ -15,7 +15,7 @@ namespace AirHockeyGame
         public Vector2 Min;
         public Vector2 Max;
 
-        public Goal(Vector3 max, Vector3 min)
+        public Goal(Vector2 max, Vector2 min)
         {
             Max = max; // ex (100,0)
             Min = min; // ex (200, 20)

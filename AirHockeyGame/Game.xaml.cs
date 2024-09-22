@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using SlimDX;
 
 namespace AirHockeyGame
 {
@@ -20,6 +21,10 @@ namespace AirHockeyGame
         private Display gameDisplay;
         private bool isMouseDown;
         private IEncryption encryption;
+        private object draggedShape;
+        private Point initialMousePosition;
+        private DateTime initialMouseDownTime;
+        private Stopwatch stopwatch;
 
         public Game(TcpClient client, NetworkStream stream, string username, string encryptionType)
         {
@@ -39,12 +44,12 @@ namespace AirHockeyGame
 
         private void InitializeGameComponents(string username)
         {
-            Paddle paddle = /* Obtain paddle for player one */;
-            Goal goal = /* Obtain goal */;
-            var puckShape = /* Obtain puck shape */;
+            //Paddel paddle = /* Obtain paddle for player one */;
+            //Goal goal = /* Obtain goal */;
+            //var puckShape = /* Obtain puck shape */;
 
-            gameDisplay = new Display { HockeyTable = /* Obtain hockey canvas */ };
-            gameEngine = new GameEngine(paddle, goal, puckShape, username, gameDisplay);
+            //gameDisplay = new Display { HockeyTable = /* Obtain hockey canvas */ };
+            //gameEngine = new GameEngine(paddle, goal, puckShape, username);
         }
 
         private void StartGameNetworking()
@@ -75,7 +80,7 @@ namespace AirHockeyGame
             if (draggedShape != null)
             {
                 isMouseDown = true;
-                Engine.Player.Paddle.DrawingShape.CaptureMouse();
+                gameEngine.player.Paddel.PaddelDrawingShape.CaptureMouse();
                 initialMousePosition = e.GetPosition(HockeyCanvas);
                 initialMouseDownTime = DateTime.Now;
                 stopwatch.Reset();
@@ -90,7 +95,7 @@ namespace AirHockeyGame
             if (draggedShape != null && isMouseDown)
             {
                 isMouseDown = false;
-                Engine.Player.Paddle.DrawingShape.ReleaseMouseCapture();
+                gameEngine.player.Paddel.PaddelDrawingShape.ReleaseMouseCapture();
 
                 // Optionally, handle UI changes or pause logic here
             }
@@ -101,11 +106,11 @@ namespace AirHockeyGame
             if (isMouseDown)
             {
                 var mousePos = e.GetPosition(HockeyCanvas);
-                Engine.Player.Paddle.Position = new Vector3((float)(mousePos.X - draggedShape.DrawingShape.Width / 2),
-                                                            (float)(mousePos.Y - draggedShape.DrawingShape.Height / 2), 0);
+                //gameEngine.player.Paddel.Position = new Vector2((float)(mousePos.X - draggedShape.PaddelDrawingShape.Width / 2),
+                //                                            (float)(mousePos.Y - draggedShape.PaddelDrawingShape.Height / 2));
 
                 // Use display class to update canvas
-                Engine.Player.Paddle.UpdatePosition(); // Update paddle position
+                // Update paddle position
             }
         }
 
@@ -114,7 +119,7 @@ namespace AirHockeyGame
             while (isMouseDown)
             {
                 // Send the updated status to the server
-                Status status = Engine.GenerateStatus();
+                Status status = gameEngine.GenerateStatus();
                 string statusJson = status.ToJson();
 
                 // Encrypt the status before sending

@@ -15,7 +15,7 @@ namespace AirHockeyGame
             puck = new Puck(puckShape);
 
             // Start the game loop
-            Task.Run(() => GameLoop()); // Run the game loop
+            //Task.Run(() => GameLoop()); // Run the game loop
         }
 
         public void UpdateGame()
@@ -27,16 +27,16 @@ namespace AirHockeyGame
 
         public void CheckCollision()
         {
-            puck.BoundaryCollision(/* canvasHeight */, /* canvasWidth */);
-            if (puck.CheckPadelCollision(player.Paddle))
-                puck.ResolveCollision(player.Paddle);
+            //puck.BoundaryCollision(/* canvasHeight */, /* canvasWidth */);
+            if (puck.CheckPadelCollision(player.Paddel))
+                puck.ResolveCollision(player.Paddel);
         }
 
         public Status GenerateStatus()
         {
             return new Status(
                 puck.Position,
-                player.Paddle.Position,
+                player.Paddel.Position,
                 player.PlayerScore, // Adjust if using multiple players
                 0 // Placeholder for second player score if needed
             );
@@ -45,7 +45,7 @@ namespace AirHockeyGame
         public void UpdateGame(Status gameStatus)
         {
             puck.Position = gameStatus.PuckPosition;
-            player.Paddle.Position = gameStatus.PaddleOnePosition;
+            player.Paddel.Position = gameStatus.PuckPosition;
 
             // Update visual positions if needed
         }

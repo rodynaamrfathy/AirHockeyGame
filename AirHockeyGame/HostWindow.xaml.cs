@@ -37,7 +37,7 @@ namespace AirHockeyGame
                 hostName = "Unknown";
                 return;
             }
-            WelcomeText.Text = $"Welcome, {hostName}";
+            //WelcomeText.Text = $"Welcome, {hostName}";
             StartHosting();
             GetHostName.Visibility = Visibility.Hidden;
             StatusTextBlock.Visibility = Visibility.Visible;
@@ -82,7 +82,7 @@ namespace AirHockeyGame
                 StatusTextBlock.Text = "Client is connected";
 
                 // Pass the client and stream to the Game window
-                Game game = new Game(client, stream, hostName);
+                Game game = new Game(client, stream, hostName, "AES");
                 game.Show();
 
                 // Close the host window

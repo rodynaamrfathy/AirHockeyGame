@@ -86,7 +86,7 @@ namespace AirHockeyGame
             stream = client.GetStream();
 
             // Transition to the Game window and pass client and stream
-            Game game = new Game(client, stream, clientName);
+            Game game = new Game(client, stream, clientName, "AES");
             game.Show();
             this.Close();
         }
