@@ -36,6 +36,7 @@ namespace AirHockeyGame
 
             // Start the networking tasks
             Task.Run(() => StartGameNetworking());
+            
             Task.Run(() => SendGameUpdates());
 
             // Start the game loop
@@ -44,6 +45,7 @@ namespace AirHockeyGame
 
         private void StartGameNetworking()
         {
+
             while (true)
             {
                 try
@@ -167,25 +169,33 @@ namespace AirHockeyGame
 
         public void GameLoop()
         {
+
             Stopwatch frameStopwatch = new Stopwatch();
+
             frameStopwatch.Start();
-            gameEngine.puck.FaceOff();
             while (!gameEngine.GameOver)
             {
+                Debug.WriteLine("3333333");
+
                 // Update the game state
                 gameEngine.UpdateGame((float) HockeyCanvas.ActualHeight, (float) HockeyCanvas.ActualWidth); // Call to update game logic and check for collisions
+                Debug.WriteLine("game loopp and check for collision");
+
+
                 gameDisplay.UpdatePuckDisplay(gameEngine.puck);
+
+
                 // Render the game display
                 Dispatcher.Invoke(() =>
                 {
                     gameDisplay.UpdateGameCanvas(gameEngine.GenerateStatus(), PaddleTwoCanvas, Puck);
                 });
 
-                // Control frame rate (e.g., 60 FPS)
-                while (frameStopwatch.ElapsedMilliseconds < 16) // ~60 FPS
-                {
-                    // Wait
-                }
+                //// Control frame rate (e.g., 60 FPS)
+                //while (frameStopwatch.ElapsedMilliseconds < 16) // ~60 FPS
+                //{
+                //    // Wait
+                //}
                 frameStopwatch.Restart();
             }
         }

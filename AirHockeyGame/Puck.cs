@@ -75,6 +75,7 @@ namespace AirHockeyGame
 
         public bool CheckPadelCollision(Paddel paddel)
         {
+
             if (paddel == null) return false;
 
             // Compute the center of the puck and the paddle

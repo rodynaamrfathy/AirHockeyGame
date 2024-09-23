@@ -1,4 +1,5 @@
-﻿using System.Windows.Shapes;
+﻿using System.Diagnostics;
+using System.Windows.Shapes;
 
 namespace AirHockeyGame
 {
@@ -24,7 +25,15 @@ namespace AirHockeyGame
         {
             puck.BoundaryCollision(canvasHeight, canvasWidth);
             if (puck.CheckPadelCollision(player.Paddel))
+            {
+                Debug.WriteLine("collided!!!!!!");
                 puck.ResolveCollision(player.Paddel);
+            }
+            else
+            {
+                Debug.WriteLine("did not collide!!!!!!");
+
+            }
         }
 
         public Status GenerateStatus()
