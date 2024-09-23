@@ -173,7 +173,7 @@ namespace AirHockeyGame
             while (!gameEngine.GameOver)
             {
                 // Update the game state
-                gameEngine.UpdateGame(); // Call to update game logic and check for collisions
+                gameEngine.UpdateGame((float) HockeyCanvas.ActualHeight, (float) HockeyCanvas.ActualWidth); // Call to update game logic and check for collisions
                 gameDisplay.UpdatePuckDisplay(gameEngine.puck);
                 // Render the game display
                 Dispatcher.Invoke(() =>

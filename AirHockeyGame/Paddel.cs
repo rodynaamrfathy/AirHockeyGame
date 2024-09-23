@@ -37,9 +37,9 @@ namespace AirHockeyGame
                 Position = new Vector2(Position.X, canvasHeight - Radius);
             }
             // Restrict movement to the left boundary
-            if (Position.X - Radius - 10 <= 0)
+            if (Position.X <= 0)
             {
-                Position = new Vector2(Radius - 10, Position.Y);
+                Position = new Vector2(Radius, Position.Y);
             }
 
             // Restrict movement to the right boundary

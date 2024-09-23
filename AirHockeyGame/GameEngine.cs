@@ -14,16 +14,15 @@ namespace AirHockeyGame
             puck = new Puck(puckShape);
         }
 
-        public void UpdateGame()
+        public void UpdateGame(float canvasHeight, float canvasWidth)
         {
-            puck.UpdatePosition(1 / 60f); // Assuming a 60 FPS update, adjust accordingly
-            CheckCollision();
+            CheckCollision(canvasHeight, canvasWidth);
         }
 
 
-        public void CheckCollision()
+        public void CheckCollision(float canvasHeight, float canvasWidth)
         {
-            //puck.BoundaryCollision(/* canvasHeight */, /* canvasWidth */);
+            puck.BoundaryCollision(canvasHeight, canvasWidth);
             if (puck.CheckPadelCollision(player.Paddel))
                 puck.ResolveCollision(player.Paddel);
         }
