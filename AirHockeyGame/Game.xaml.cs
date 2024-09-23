@@ -24,6 +24,7 @@ namespace AirHockeyGame
         private Point initialMousePosition;
         private DateTime initialMouseDownTime;
         private Stopwatch stopwatch;
+        private Status gameStatus;
 
         public Game(TcpClient client, NetworkStream stream, string username, string encryptionType)
         {
@@ -81,7 +82,7 @@ namespace AirHockeyGame
             initialMousePosition = e.GetPosition(HockeyCanvas);
             initialMouseDownTime = DateTime.Now;
             stopwatch.Reset();
-            Task.Run(() => SendGameUpdates());
+            //Task.Run(() => SendGameUpdates());
         }
 
         private void paddle_mouseleftbuttonup(object sender, MouseButtonEventArgs e)
@@ -135,16 +136,43 @@ namespace AirHockeyGame
             }
         }
 
+        private void ReceiveGameUpdates()
+        {
+            byte[] buffer = new byte[1024];
+            int bytesRead = stream.Read(buffer, 0, buffer.Length);
+            string encryptedMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+            string receivedMessage = encryption.Decrypt(encryptedMessage);
+            Status gameStatus = Status.FromJson(receivedMessage);
+
+            // Process received game status here
+        }
+
         public void GameLoop()
         {
-            //each 60fps it should recheck for the position of
-            //the paddel and the force applied on it by the mouse
-            //and then update on the screen display
-            //and send game update
+            // each 60fps it should recheck for the position of the paddel and the force applied on it by the mouse
+            // send updates continuously
+            // recive update
 
-            //3yza el send update w el display y7slo parrallel lb3d msh wara b3d
+            // parralel to all of this display any update on the screen 
 
-            //Start sending updates continuously while the mouse is down
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            while (!gameEngine.GameOver)
+            {
+                // Handle input
+
+                // Update game state
+
+                // Render the game display
+
+                // Control frame rate (e.g., 60 FPS)
+                while (stopwatch.ElapsedMilliseconds < 16) // ~60 FPS
+                {
+                    // Wait
+                }
+                stopwatch.Restart();
+            }
         }
     }
 }

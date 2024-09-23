@@ -8,6 +8,7 @@ namespace AirHockeyGame
     {
         public Puck puck;
         public Player player;
+        public bool GameOver = false;
 
         public GameEngine(Paddel paddel, Goal goal, Shape puckShape, string username)
         {
@@ -34,8 +35,7 @@ namespace AirHockeyGame
             return new Status(
                 puck.Position,
                 player.Paddel.Position,
-                player.PlayerScore, // Adjust if using multiple players
-                0 // Placeholder for second player score if needed
+                player.PlayerScore
             );
         }
 

@@ -12,15 +12,14 @@ namespace AirHockeyGame
     {
         public Vector2 PuckPosition { get; set; }
         public Vector2 PaddlePosition { get; set; }
-        public int PlayerOneScore { get; set; }
-        public int PlayerTwoScore { get; set; }
-        
-        public Status(Vector2 puckPos, Vector2 p1Pos, int p1Score, int p2Score)
+        public int PlayerScore { get; set; }
+        public bool GameOver { get; set; } = false;
+
+        public Status(Vector2 puckPos, Vector2 p1Pos, int p1Score)
         {
             PuckPosition = puckPos;
             PuckPosition = p1Pos;
-            PlayerOneScore = p1Score;
-            PlayerTwoScore = p2Score;
+            PlayerScore = p1Score;
         }
 
         public string ToJson()

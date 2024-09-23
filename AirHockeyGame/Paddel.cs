@@ -25,16 +25,6 @@ namespace AirHockeyGame
             Canvas.SetLeft(PaddelDrawingShape, 142); // X position
         }
 
-        // ApplyForce - Calculates the velocity of the paddle based on its movement and time taken
-        public void ApplyForce(Point initialPaddelPosition, Point finalPaddelPosition, TimeSpan timeTaken)
-        {
-            // Calculate velocity based on position change and time taken
-            Velocity.X = (float)(finalPaddelPosition.X - initialPaddelPosition.X) / (float)timeTaken.TotalSeconds;
-            Velocity.Y = (float)(finalPaddelPosition.Y - initialPaddelPosition.Y) / (float)timeTaken.TotalSeconds;
-
-            Velocity *= 0.95f;
-        }
-
         public void RestrictMovement(float canvasHeight, float canvasWidth)
         {
             if (Position.Y - Radius <= 280)
