@@ -1,4 +1,4 @@
-﻿using SlimDX.XACT3;
+using SlimDX.XACT3;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -169,34 +169,35 @@ namespace AirHockeyGame
 
         public void GameLoop()
         {
-
             Stopwatch frameStopwatch = new Stopwatch();
-
             frameStopwatch.Start();
+            gameEngine.puck.FaceOff();
+
             while (!gameEngine.GameOver)
             {
-                Debug.WriteLine("3333333");
+                float canvasHeight = (float)HockeyCanvas.ActualHeight;
+                float canvasWidth = (float)HockeyCanvas.ActualWidth;
 
                 // Update the game state
-                gameEngine.UpdateGame((float) HockeyCanvas.ActualHeight, (float) HockeyCanvas.ActualWidth); // Call to update game logic and check for collisions
-                Debug.WriteLine("game loopp and check for collision");
+                gameEngine.UpdateGame(canvasHeight, canvasWidth);
 
+                // Check for collisions with the paddle
+                if (gameEngine.puck.CheckPadelCollision(gameEngine.player.Paddel))
+                {
+                    gameEngine.puck.ResolveCollision(gameEngine.player.Paddel);
+                }
 
-                gameDisplay.UpdatePuckDisplay(gameEngine.puck);
+                // Update puck position
+                gameEngine.puck.UpdatePosition(0.016f); // 60 FPS -> deltaTime ~ 16ms
 
-
-                // Render the game display
+                // Update UI on the main thread
                 Dispatcher.Invoke(() =>
                 {
                     gameDisplay.UpdateGameCanvas(gameEngine.GenerateStatus(), PaddleTwoCanvas, Puck);
                 });
 
-                //// Control frame rate (e.g., 60 FPS)
-                //while (frameStopwatch.ElapsedMilliseconds < 16) // ~60 FPS
-                //{
-                //    // Wait
-                //}
-                frameStopwatch.Restart();
+                // Control frame rate (~60 FPS)
+                Task.Delay(16).Wait();
             }
         }
 
