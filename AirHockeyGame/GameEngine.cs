@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Windows.Automation;
 using System.Windows.Shapes;
 
 namespace AirHockeyGame
@@ -53,7 +54,7 @@ namespace AirHockeyGame
         }
         public void CheckForGoal()
         {
-            player.UpdateScore()
+            player.UpdateScore(puck.Position, puck.Radius);
             ResetGameAfterGoal();
         }
 
