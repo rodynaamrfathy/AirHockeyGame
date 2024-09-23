@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-using System.Windows.Shapes;
-using SlimDX;
+﻿using System.Windows.Shapes;
 
 namespace AirHockeyGame
 {

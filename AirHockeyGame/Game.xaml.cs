@@ -64,7 +64,7 @@ namespace AirHockeyGame
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            gameDisplay.UpdateGameCanvas(gameStatus, PaddleTwoCanvas);
+                            gameDisplay.UpdateGameCanvas(gameStatus, PaddleTwoCanvas, Puck);
                         });
                     }
                     else
@@ -126,7 +126,6 @@ namespace AirHockeyGame
             initialMousePosition = e.GetPosition(HockeyCanvas);
             initialMouseDownTime = DateTime.Now;
             stopwatch.Reset();
-            //Task.Run(() => SendGameUpdates());
         }
 
         private void paddle_mouseleftbuttonup(object sender, MouseButtonEventArgs e)
@@ -166,16 +165,17 @@ namespace AirHockeyGame
         {
             Stopwatch frameStopwatch = new Stopwatch();
             frameStopwatch.Start();
-
+            gameEngine.puck.FaceOff();
             while (!gameEngine.GameOver)
             {
+
                 // Handle input
                 // (If needed, you can integrate input handling here) 
 
                 // Render the game display
                 Dispatcher.Invoke(() =>
                 {
-                    gameDisplay.UpdateGameCanvas(gameEngine.GenerateStatus(), PaddleTwoCanvas);
+                    gameDisplay.UpdateGameCanvas(gameEngine.GenerateStatus(), PaddleTwoCanvas, Puck);
                 });
 
                 // Control frame rate (e.g., 60 FPS)

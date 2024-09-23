@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Shapes;
 
 namespace AirHockeyGame
 {
@@ -26,15 +27,15 @@ namespace AirHockeyGame
             //Canvas.SetTop();
         }
 
-        public void UpdateGameCanvas(Status gameStatus, Canvas paddel2DrawingShape)
+        public void UpdateGameCanvas(Status gameStatus, Canvas paddleTwoDrawingShape, Ellipse puckShape)
         {
             // Update player two paddle position
-            Canvas.SetRight(paddel2DrawingShape, gameStatus.PaddlePosition.X);
-            Canvas.SetBottom(paddel2DrawingShape, gameStatus.PaddlePosition.Y);
+            Canvas.SetRight(paddleTwoDrawingShape, gameStatus.PaddlePosition.X);
+            Canvas.SetBottom(paddleTwoDrawingShape, gameStatus.PaddlePosition.Y);
 
             // Update puck position
-            //Canvas.SetLeft();
-            //Canvas.SetTop();
+            Canvas.SetRight(puckShape, gameStatus.PuckPosition.X);
+            Canvas.SetBottom(puckShape, gameStatus.PuckPosition.Y);
         }
 
         public void DisplayScore()
