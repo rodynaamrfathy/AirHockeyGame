@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 ﻿using System.Diagnostics;
-=======
->>>>>>> 61448d40822b1b5fdb9b551d40d3435d73054f64
 using System.Windows.Shapes;
 
 namespace AirHockeyGame
