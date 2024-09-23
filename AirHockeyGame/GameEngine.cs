@@ -1,4 +1,4 @@
-﻿using System.Windows.Shapes;
+using System.Windows.Shapes;
 
 namespace AirHockeyGame
 {
@@ -42,5 +42,27 @@ namespace AirHockeyGame
 
             // Update visual positions if needed
         }
+public void CheckForGoal(float canvasHeight, float canvasWidth)
+{
+    // Check if puck has entered player one's goal
+    if (puck.Position.Y <= 0)
+    {
+        playerTwoScore++;
+        ResetGameAfterGoal();
+    }
+
+    // Check if puck has entered player two's goal
+    if (puck.Position.Y >= canvasHeight - puck.Radius)
+    {
+        playerOneScore++;
+        ResetGameAfterGoal();
+    }
+}
+
+private void ResetGameAfterGoal()
+{
+    puck.FaceOff();
+    // Reset paddles to starting positions if needed
+}
     }
 }
