@@ -149,9 +149,12 @@ namespace AirHockeyGame
 
                 // Update paddle position based on mouse movement
                 gameEngine.player.Paddel.Position = new Vector2(
-                    (float) (gameEngine.player.Paddel.Position.X + deltaX),
+                    (float)(gameEngine.player.Paddel.Position.X + deltaX),
                     (float)(gameEngine.player.Paddel.Position.Y + deltaY)
                 );
+
+                // Restrict movement to stay within canvas bounds
+                gameEngine.player.Paddel.RestrictMovement((float) HockeyCanvas.ActualHeight, (float)HockeyCanvas.ActualWidth);
 
                 // Update the visual representation of the paddle
                 gameDisplay.UpdatePaddleDisplay(gameEngine.player.Paddel);
@@ -161,6 +164,7 @@ namespace AirHockeyGame
             }
         }
 
+
         public void GameLoop()
         {
             Stopwatch frameStopwatch = new Stopwatch();
@@ -168,10 +172,9 @@ namespace AirHockeyGame
             gameEngine.puck.FaceOff();
             while (!gameEngine.GameOver)
             {
-
-                // Handle input
-                // (If needed, you can integrate input handling here) 
-
+                // Update the game state
+                gameEngine.UpdateGame(); // Call to update game logic and check for collisions
+                gameDisplay.UpdatePuckDisplay(gameEngine.puck);
                 // Render the game display
                 Dispatcher.Invoke(() =>
                 {
@@ -186,5 +189,6 @@ namespace AirHockeyGame
                 frameStopwatch.Restart();
             }
         }
+
     }
 }

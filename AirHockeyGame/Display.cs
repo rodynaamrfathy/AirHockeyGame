@@ -20,11 +20,11 @@ namespace AirHockeyGame
             Canvas.SetTop(paddle.PaddelDrawingShape, paddle.Position.Y);
         }
 
-        public void UpdatePuckDisplay(Vector2 puckPos)
+        public void UpdatePuckDisplay(Puck puck)
         {
             // Update puck position
-            //Canvas.SetLeft();
-            //Canvas.SetTop();
+            Canvas.SetLeft(puck.PuckDrawingShape, puck.Position.X);
+            Canvas.SetTop(puck.PuckDrawingShape, puck.Position.Y);
         }
 
         public void UpdateGameCanvas(Status gameStatus, Canvas paddleTwoDrawingShape, Ellipse puckShape)

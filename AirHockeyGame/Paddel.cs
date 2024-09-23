@@ -17,6 +17,7 @@ namespace AirHockeyGame
         {
             PaddelDrawingShape = paddelShape;
             Mass = 0.2f; // 200 grams, converted to kg
+            Radius = 30;
         }
 
         public override void FaceOff()
@@ -36,9 +37,9 @@ namespace AirHockeyGame
                 Position = new Vector2(Position.X, canvasHeight - Radius);
             }
             // Restrict movement to the left boundary
-            if (Position.X - Radius <= 0)
+            if (Position.X - Radius - 10 <= 0)
             {
-                Position = new Vector2(Radius, Position.Y);
+                Position = new Vector2(Radius - 10, Position.Y);
             }
 
             // Restrict movement to the right boundary

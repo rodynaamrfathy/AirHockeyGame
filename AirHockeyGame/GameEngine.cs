@@ -16,10 +16,10 @@ namespace AirHockeyGame
 
         public void UpdateGame()
         {
-            // Update game logic, check for collisions, etc.
+            puck.UpdatePosition(1 / 60f); // Assuming a 60 FPS update, adjust accordingly
             CheckCollision();
-            // Further game update logic if needed
         }
+
 
         public void CheckCollision()
         {
