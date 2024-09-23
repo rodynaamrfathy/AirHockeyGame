@@ -1,4 +1,4 @@
-﻿using SlimDX.XACT3;
+using SlimDX.XACT3;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -189,6 +189,39 @@ namespace AirHockeyGame
                 frameStopwatch.Restart();
             }
         }
+public void GameLoop()
+{
+    Stopwatch frameStopwatch = new Stopwatch();
+    frameStopwatch.Start();
+    gameEngine.puck.FaceOff();
+    
+    while (!gameEngine.GameOver)
+    {
+        float canvasHeight = (float)HockeyCanvas.ActualHeight;
+        float canvasWidth = (float)HockeyCanvas.ActualWidth;
+
+        // Update the game state
+        gameEngine.UpdateGame(canvasHeight, canvasWidth);
+
+        // Check for collisions with the paddle
+        if (gameEngine.puck.CheckPaddleCollision(gameEngine.PlayerPaddle))
+        {
+            gameEngine.puck.ResolveCollision(gameEngine.PlayerPaddle);
+        }
+
+        // Update puck position
+        gameEngine.puck.UpdatePosition(0.016f); // 60 FPS -> deltaTime ~ 16ms
+
+        // Update UI on the main thread
+        Dispatcher.Invoke(() =>
+        {
+            gameDisplay.UpdateGameCanvas(gameEngine.GenerateStatus(), PaddleTwoCanvas, Puck);
+        });
+
+        // Control frame rate (~60 FPS)
+        Task.Delay(16).Wait();
+    }
+}
 
     }
 }
