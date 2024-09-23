@@ -42,7 +42,6 @@ namespace AirHockeyGame
         public void UpdateGame(Status gameStatus)
         {
             puck.Position = gameStatus.PuckPosition;
-            player.Paddel.Position = gameStatus.PuckPosition;
 
             // Update visual positions if needed
         }

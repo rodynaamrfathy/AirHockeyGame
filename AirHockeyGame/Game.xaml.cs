@@ -23,8 +23,7 @@ namespace AirHockeyGame
         private IEncryption encryption;
         private Point initialMousePosition;
         private DateTime initialMouseDownTime;
-        private Stopwatch stopwatch;
-        private Status gameStatus;
+        private Stopwatch stopwatch = new Stopwatch();
 
         public Game(TcpClient client, NetworkStream stream, string username, string encryptionType)
         {
@@ -32,15 +31,80 @@ namespace AirHockeyGame
             this.client = client;
             this.stream = stream;
 
-            // Select the encryption type (AES, DES, RSA)
             encryption = EncryptionFactory.GetEncryptionAlgorithm(encryptionType);
-
-            // Initialize the game components
             InitializeGameComponents(username);
 
             // Start the networking tasks
-            StartGameNetworking();
+            Task.Run(() => StartGameNetworking());
+            Task.Run(() => SendGameUpdates());
+
+            // Start the game loop
+            Task.Run(() => GameLoop());
         }
+
+        private void StartGameNetworking()
+        {
+            while (true)
+            {
+                try
+                {
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                    if (bytesRead == 0) break; // Connection has been closed
+                    string encryptedMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                    Debug.WriteLine($"Received Encrypted Message: {encryptedMessage}");
+
+                    // Decrypt the received message
+                    string receivedMessage = encryption.Decrypt(encryptedMessage);
+                    Debug.WriteLine($"Decrypted Message: {receivedMessage}");
+
+                    // Handle the received message
+                    Status gameStatus = Status.FromJson(receivedMessage);
+                    if (gameStatus != null)
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            gameDisplay.UpdateGameCanvas(gameStatus, PaddleTwoCanvas);
+                        });
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Game status is null after deserialization.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in StartGameNetworking: {ex.Message}");
+                    break; // Exit loop on error
+                }
+            }
+        }
+
+        private void SendGameUpdates()
+        {
+            while (true)
+            {
+                try
+                {
+                    Status status = gameEngine.GenerateStatus();
+                    string statusJson = status.ToJson();
+
+                    // Encrypt the status before sending
+                    string encryptedStatus = encryption.Encrypt(statusJson);
+                    byte[] statusBytes = Encoding.UTF8.GetBytes(encryptedStatus);
+                    stream.Write(statusBytes, 0, statusBytes.Length);
+
+                    // Delay between updates
+                    Task.Delay(50).Wait();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in SendGameUpdates: {ex.Message}");
+                    break; // Exit loop on error
+                }
+            }
+        }
+
 
         private void InitializeGameComponents(string username)
         {
@@ -50,29 +114,9 @@ namespace AirHockeyGame
 
             gameDisplay = new Display { HockeyTable = HockeyCanvas };
             gameEngine = new GameEngine(paddle, goal, puckShape, username);
-        }
-
-        private void StartGameNetworking()
-        {
-            Task.Run(() =>
-            {
-                while (true)
-                {
-                    byte[] buffer = new byte[1024];
-                    int bytesRead = stream.Read(buffer, 0, buffer.Length);
-                    string encryptedMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-
-                    // Decrypt the received message
-                    string receivedMessage = encryption.Decrypt(encryptedMessage);
-
-                    // Handle the received message (like player movements, game state updates, etc.)
-                    Status gameStatus = Status.FromJson(receivedMessage);
-                    Dispatcher.Invoke(() =>
-                    {
-                        gameDisplay.UpdateGameCanvas(gameStatus);
-                    });
-                }
-            });
+            gameDisplay.HockeyTable.MouseMove += PaddelCanvas_MouseMove;
+            gameEngine.player.Paddel.PaddelDrawingShape.MouseLeftButtonDown += Paddle_MouseLeftButtonDown;
+            gameEngine.player.Paddel.PaddelDrawingShape.MouseLeftButtonUp += paddle_mouseleftbuttonup;
         }
 
         private void Paddle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -111,67 +155,35 @@ namespace AirHockeyGame
                 );
 
                 // Update the visual representation of the paddle
-                gameDisplay.UpdatePaddleDisplay(gameEngine.player.Paddel.Position);
+                gameDisplay.UpdatePaddleDisplay(gameEngine.player.Paddel);
 
                 // Update the initial mouse position for the next move event
                 initialMousePosition = mousePos;
             }
         }
 
-        private void SendGameUpdates()
-        {
-            while (isMouseDown)
-            {
-                // Send the updated status to the server
-                Status status = gameEngine.GenerateStatus();
-                string statusJson = status.ToJson();
-
-                // Encrypt the status before sending
-                string encryptedStatus = encryption.Encrypt(statusJson);
-                byte[] statusBytes = Encoding.UTF8.GetBytes(encryptedStatus);
-                stream.Write(statusBytes, 0, statusBytes.Length);
-
-                // Delay between updates (e.g., 50 milliseconds for smooth updates)
-                Task.Delay(50).Wait();
-            }
-        }
-
-        private void ReceiveGameUpdates()
-        {
-            byte[] buffer = new byte[1024];
-            int bytesRead = stream.Read(buffer, 0, buffer.Length);
-            string encryptedMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-            string receivedMessage = encryption.Decrypt(encryptedMessage);
-            Status gameStatus = Status.FromJson(receivedMessage);
-
-            // Process received game status here
-        }
-
         public void GameLoop()
         {
-            // each 60fps it should recheck for the position of the paddel and the force applied on it by the mouse
-            // send updates continuously
-            // recive update
-
-            // parralel to all of this display any update on the screen 
-
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
+            Stopwatch frameStopwatch = new Stopwatch();
+            frameStopwatch.Start();
 
             while (!gameEngine.GameOver)
             {
                 // Handle input
-
-                // Update game state
+                // (If needed, you can integrate input handling here) 
 
                 // Render the game display
+                Dispatcher.Invoke(() =>
+                {
+                    gameDisplay.UpdateGameCanvas(gameEngine.GenerateStatus(), PaddleTwoCanvas);
+                });
 
                 // Control frame rate (e.g., 60 FPS)
-                while (stopwatch.ElapsedMilliseconds < 16) // ~60 FPS
+                while (frameStopwatch.ElapsedMilliseconds < 16) // ~60 FPS
                 {
                     // Wait
                 }
-                stopwatch.Restart();
+                frameStopwatch.Restart();
             }
         }
     }
